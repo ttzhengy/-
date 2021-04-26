@@ -70,7 +70,9 @@ class DoubleLinkedList{
             }
             if (temp.Number == num){
                 temp.pre.next = temp.next;
-                temp.next.pre = temp.pre;
+                if (temp.next != null){
+                    temp.next.pre = temp.pre;
+                }
                 System.out.printf("已删除编号为 %d 的节点\n",num);
                 flag = true;
                 break;
