@@ -43,7 +43,7 @@ public class Heap {
         heap[cur] = a;          //插入元素比父节点元素小，或已达到根节点
     }
 
-    public int delete(){
+    public int deleteMax(){
         int pop = heap[1];
         int parent = 1;
         int child = 2*parent;
