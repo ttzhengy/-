@@ -6,9 +6,11 @@ public class DoubleLinkedListDemo {
         List.add(new DoubleHeroNode(1,"aaa","a"));
         List.add(new DoubleHeroNode(3,"ccc","c"));
         List.addByOrder(new DoubleHeroNode(2,"bbb","b"));
-        List.list();
+        // List.list();
 
-        List.delete(2);
+        List.add(new DoubleHeroNode(4,"ddd","d"));
+        List.add(new DoubleHeroNode(5,"eee","e"));
+        List.delete(5);
         List.list();
     }
 }
@@ -65,11 +67,14 @@ class DoubleLinkedList{
         DoubleHeroNode temp = head.next;
         boolean flag = false;
         while (true){
-            if(temp.next == null){
+            // 下面的判断标准改了，此处也要改
+            if(temp == null){
                 break;
             }
+            // 可以自我删除，此处改动
             if (temp.Number == num){
                 temp.pre.next = temp.next;
+                // 考虑temp.next为空的情况
                 if (temp.next != null){
                     temp.next.pre = temp.pre;
                 }
