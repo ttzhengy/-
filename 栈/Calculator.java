@@ -3,7 +3,7 @@ package 栈;
 // 只能执行无括号的，数字为个位数的四则运算
 public class Calculator {
     public static void main(String[] args) {
-        String expression = "3+2*6-2";
+        String expression = "1-1/1*3+5";
         // 一个数栈，一个符号栈
         CalculatorLinkedListStack numStack = new CalculatorLinkedListStack(10);
         CalculatorLinkedListStack operStack = new CalculatorLinkedListStack(10);
@@ -12,9 +12,10 @@ public class Calculator {
         char ch = ' ';
         int num1 = 0;
         int num2 = 0;
+        String numKeeper ="";
         while (true){
             // 依次扫描
-            ch = expression.substring(index,index+1).charAt(0);
+            ch = expression.charAt(index);
             if (operStack.isOper(ch)){  // 判断是否操作符
                 if (operStack.isEmpty()){   // 若栈为空，可直接压栈
                     operStack.push(ch);
@@ -25,13 +26,22 @@ public class Calculator {
                         numStack.push(operStack.cal(num1,num2,operStack.pull()));
                         operStack.push(ch);
                     }else {     // 当前操作符优先级高
-                        num1 = numStack.pull();
-                        num2 = numStack.pull();
-                        numStack.push(operStack.cal(num1,num2,ch));
+                        operStack.push(ch);
                     }
                 }
             }else {     // 数，入数栈
-                numStack.push(ch-48);
+                // 直接入栈有缺陷，只能计算个位数
+                // numStack.push(ch-48);
+                // 处理多位数时，不能发现是数就直接入栈。需要继续向后扫描，是数则拼接，是符号则入栈
+                numKeeper += ch;
+                // 若当前已经是表达式最后一位，则直接压栈
+                if (index+1==expression.length()){
+                    numStack.push(Integer.parseInt(numKeeper));
+                    numKeeper="";
+                }else if (operStack.isOper(expression.charAt(index+1))){
+                    numStack.push(Integer.parseInt(numKeeper));
+                    numKeeper="";
+                }
             }
             if (++index >= expression.length()){
                 break;
@@ -57,7 +67,7 @@ public class Calculator {
                 numStack2.push(operStack2.cal(num1,num2,operStack2.pull()));
             }
         }
-        System.out.printf("表达式结果为%d",numStack2.pull());
+        System.out.printf("表达式结果为%d\n",numStack2.pull());
     }
 }
 
