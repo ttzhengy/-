@@ -1,29 +1,39 @@
 package 图;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
 
 public class GraphDemo {
     public static void main(String[] args) {
-        String[] Vertexs = {"A", "B", "C", "D", "E"};
-        int n = Vertexs.length;
+        // 测试一把图是否创建ok
+        String Vertexs[] = {"1", "2", "3", "4", "5", "6", "7", "8"};
+        int n = Vertexs.length; // 结点的个数
 
+        // 创建图对象
         Graph graph = new Graph(n);
+        // 循环的添加顶点
         for (String vertex : Vertexs) {
             graph.insertVertex(vertex);
         }
 
-        //添加边
-        //A-B A-C B-C B-D B-E
-        graph.insertEdge(0, 1, 1); // A-B
-        graph.insertEdge(0, 2, 1); // A-C
-        graph.insertEdge(1, 2, 1); // B-C
-        graph.insertEdge(1, 3, 1); // B-D
-        graph.insertEdge(1, 4, 1); // B-E
-        //显示邻结矩阵
+        //更新边的关系
+        graph.insertEdge(0, 1, 1);
+        graph.insertEdge(0, 2, 1);
+        graph.insertEdge(1, 3, 1);
+        graph.insertEdge(1, 4, 1);
+        graph.insertEdge(3, 7, 1);
+        graph.insertEdge(4, 7, 1);
+        graph.insertEdge(2, 5, 1);
+        graph.insertEdge(2, 6, 1);
+        graph.insertEdge(5, 6, 1);
+
+        //显示一把邻结矩阵
         graph.showGraph();
+
+        System.out.println("深度遍历");
         graph.DFS();
+        System.out.println();
+        System.out.println("广度遍历");
+        graph.BFS();
     }
 }
 
@@ -40,24 +50,6 @@ class Graph{
         isVisited = new boolean[n];
     }
 
-    // public int getFirstNeighbor(int i){
-    //     for (int j = 0; j < vertexList.size(); j++) {
-    //         if (edges[i][j]>0){
-    //             return j;
-    //         }
-    //     }
-    //     return -1;
-    // }
-    //
-    // public int getNextNeightbor(int i,int j){
-    //     for (int k = j+i; k < vertexList.size(); k++) {
-    //         if (edges[i][k]>0){
-    //             return k;
-    //         }
-    //     }
-    //     return -1;
-    // }
-
     // 返回一个未被遍历的邻接节点
     public int getNextNeightbor(int i){
         for (int j = 0; j < vertexList.size(); j++) {
@@ -69,6 +61,7 @@ class Graph{
     }
 
     public void DFS(){
+        isVisited = new boolean[vertexList.size()];
         for (int i = 0; i < getNumOfVertex(); i++) {
             // 防止非连通图
             if (!isVisited[i]){
@@ -96,6 +89,34 @@ class Graph{
             // 当栈不为空，获得栈顶元素的下一个邻接节点
             if (!stack.isEmpty()){
                 w = getNextNeightbor(stack.peek());
+            }
+        }
+    }
+
+    public void BFS(){
+        isVisited = new boolean[vertexList.size()];
+        for (int i = 0; i < getNumOfVertex(); i++) {
+            // 防止非连通图
+            if (!isVisited[i]){
+                BFS(i);
+            }
+        }
+    }
+
+    private void BFS(int i){
+        System.out.print(getValueByIndex(i)+"->");
+        isVisited[i] = true;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(i);
+        // 当队列不为空，取出队列头，将这个节点的所有未遍历邻接节点入队
+        while (!queue.isEmpty()){
+            i = queue.poll();
+            int w = getNextNeightbor(i);
+            while (w!=-1){
+                isVisited[w] = true;
+                System.out.print(getValueByIndex(w)+"->");
+                queue.add(w);
+                w = getNextNeightbor(i);
             }
         }
     }
